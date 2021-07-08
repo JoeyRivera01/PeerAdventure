@@ -25,6 +25,9 @@ db.once('open', () => console.log('Connected to Mongoose'));
 
 // set initial routes
 app.use('/adventure', adventureRouter);
+app.get("/api", (req, res) => {
+  res.json({ message: "Hello from server!" });
+});
 
 // setup port listening
 app.listen(process.env.PORT || 3001);

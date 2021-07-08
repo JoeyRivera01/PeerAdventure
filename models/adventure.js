@@ -3,14 +3,16 @@ const Schema = mongoose.Schema;
 
 // product schema
 const adventureSchema = new Schema({
-  id: {
+  outcomeId: {
     type: Number,
     unique: true,
   },
-  paths: Array,
+  story: String,
+  endGame: Boolean,
+  choices: Array,
 });
 /*
- Paths Array of objects =
+ Choices Array of objects =
  [ {endGame: Boolean, text: String, outcomeId: Number}, {}, {} ]
 */
 
