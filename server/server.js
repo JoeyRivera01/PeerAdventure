@@ -16,13 +16,13 @@ app.use(express.json());
 app.use(compression());
 app.use(morgan('dev'));
 
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/../client/dist'));
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '/../public');
+app.set('views', __dirname+ '/../client/dist');
 
 // set initial routes
 app.get('/', (req, res)=>{
-  res.redirect(`http://localhost:3001/${uuidV4()}`);
+  res.redirect(`/${uuidV4()}`);
 });
 app.get('/:room', (req, res)=>{
   res.render('index.ejs', {roomId: req.params.room});
@@ -58,7 +58,7 @@ io.on('connection', socket => {
 });
 
 // setup server listening
-server.listen(3001);
+server.listen(3000);
 
 // setup port listening
 // app.listen(process.env.PORT || 3001);

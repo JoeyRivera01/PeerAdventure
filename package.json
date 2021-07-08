@@ -4,9 +4,6 @@
   "private": true,
   "proxy": "http://localhost:3001/",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
     "bootstrap": "^5.0.2",
     "compression": "^1.7.4",
     "ejs": "^3.1.6",
@@ -21,10 +18,8 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "react-prod": "webpack -d",
+    "react-dev": "webpack -d --watch",
     "server-prod": "node ./server/server.js",
     "server-dev": "nodemon ./server/server.js"
   },
@@ -47,6 +42,13 @@
     ]
   },
   "devDependencies": {
-    "nodemon": "^2.0.10"
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "nodemon": "^2.0.10",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.3.12"
   }
 }
