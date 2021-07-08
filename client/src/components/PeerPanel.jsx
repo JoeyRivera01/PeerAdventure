@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Image, Container } from 'react-bootstrap';
 
 const PeerPanel = () => {
