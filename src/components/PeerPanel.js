@@ -3,7 +3,7 @@ import { Row, Col, Card, Image, Container } from 'react-bootstrap';
 const PeerPanel = () => {
 
   return (
-    <Card bg="dark" variant="dark" style={{ width: '35vw', height: '70vh' }}>
+    <Card bg="dark" variant="dark" style={{ width: '35vw', height: '80vh' }}>
       <Container>
         <Card.Body>
           <Card.Title>Players</Card.Title>

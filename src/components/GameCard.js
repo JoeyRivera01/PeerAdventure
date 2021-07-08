@@ -3,7 +3,7 @@ import { Card, ListGroup, Container, Col, Row } from 'react-bootstrap';
 
 const GameCard = () => {
   return (
-      <Card bg="dark" variant="dark" style={{ width: '30vw', height: '70vh' }}>
+      <Card bg="dark" variant="dark" style={{ width: '30vw', height: '80vh' }}>
         <Container>
           <Col>
             <Row>
