@@ -1,14 +1,25 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button, Alert } from 'react-bootstrap'
-
+import { Container, Row, Col } from 'react-bootstrap';
+import NavigationBar from './components/NavigationBar.js';
+import GameCard from './components/GameCard.js';
+import PeerPanel from './components/PeerPanel.js';
 
 function App() {
   return (
     <div className="App">
+      <NavigationBar/>
       <header className="App-header">
-        <Alert variant="success">This is a button</Alert>
-        <Button>Start Adventure!</Button>
+      <Container >
+          <Row>
+            <Col>
+              <GameCard/>
+            </Col>
+            <Col>
+              <PeerPanel/>
+            </Col>
+          </Row>
+      </Container>
       </header>
     </div>
   );
