@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 import NavigationBar from './components/NavigationBar.jsx';
 import GameCard from './components/GameCard.jsx';
-import PeerPanel from './components/PeerPanel.jsx';
+// import PeerPanel from './components/PeerPanel.jsx';
 import { io } from "socket.io-client";
 import Peer from 'peerjs';
 import axios from 'axios';
@@ -16,6 +16,7 @@ const myPeer = new Peer(undefined, {
 
 function App() {
   const [playerCount, setPlayerCount] = useState(1);
+  const [peers, setPeers] = useState({});
   // const [adventureId, setAdventureId] = useState(1);
   // const [adventure, setAdventure] = useState();
   // const [] = useState();
@@ -23,9 +24,7 @@ function App() {
   useEffect(() => {
     const hostVideo = document.createElement('video');
     hostVideo.muted= true;
-    hostVideo.id = 'host-video'
-    hostVideo.classList.add('callerVideo')
-
+    hostVideo.id = 'host-video';
     navigator.mediaDevices.getUserMedia({
       video: true,
       audio: false, // set to false for demo to avoid feedback
@@ -33,32 +32,36 @@ function App() {
     .then(stream => {
       addVideoStream(hostVideo, stream);
 
-      myPeer.on('call', call => {
-        call.answer(stream)
-        let video = document.createElement('video');
-        video.classList.add('guest-video'); // is this necessary?
-
-        call.on('stream', callerStream =>{
-          addVideoStream(video, callerStream);
-        });
-      });
-
       socket.on('user-connected', userId => {
         connectToNewUser(userId, stream);
+      });
+
+      myPeer.on('call', call => {
+        call.answer(stream);
+        const video = document.createElement('video');
+        call.on('stream', userVideoStream => {
+          addVideoStream(video, userVideoStream);
+        });
       });
     });
 
     socket.on('user-disconnected', userId => {
-      if (userId) {
-        userId.close();
+      if (peers[userId]) {
+        console.log('closing', peers[userId]);
+        peers[userId].close();
       }
     });
+
+    myPeer.on('open', userId => {
+      socket.emit('join-room', ROOM_ID, userId, socket.id)
+    });
+
   },[]);
 
   const addVideoStream = (video, stream) => {
     console.log('adding video stream');
     video.srcObject = stream;
-    video.addEventListener('loadedmetadata',() => {
+    video.addEventListener('loadedmetadata', () => {
       video.play();
     });
     document.getElementById('video-grid').append(video)
@@ -66,25 +69,26 @@ function App() {
 
   const connectToNewUser = (userId, stream) => {
     console.log('a new user is attempting a connection');
-    const call = myPeer.call(userId, stream);
-    let guestVideo = document.createElement('video');
-    guestVideo.muted = true;
-    guestVideo.id = 'guest-video';
+    let call = myPeer.call(userId, stream);
+    let video = document.createElement('video');
+    video.muted = true; // set to true just for demo to avoid feedback.
+    video.id = 'guest-video';
+
     call.on('stream', userVideoStream =>{
       console.log('receiving video stream from new user');
-      addVideoStream(guestVideo, userVideoStream)
+      addVideoStream(video, userVideoStream);
     });
 
-    call.on('close', ()=> {
-      guestVideo.remove();
-      // let obj = {};
-      // obj[userId]= undefined;
-      // setState(obj);
+    call.on('close', () => {
+      video.remove();
+      let peer = {};
+      peer[userId] = null;
+      setPeers(peer);
     });
 
-    // let obj = {}
-    // obj[userId] = call;
-    // setState(obj);
+    let peer = {}
+    peer[userId] = call;
+    setPeers(peer);
   }
 
   return (
@@ -96,9 +100,16 @@ function App() {
             <Col>
               <GameCard/>
             </Col>
-            <Col >
-              {/* <div id='video-grid'></div> */}
-              <PeerPanel playerCount={playerCount}/>
+            <Col>
+            <div id='video-grid'></div>
+            {/* <Card bg="dark" variant="dark" style={{ width: '35vw', height: '80vh' }}>
+              <Container>
+                <Card.Body>
+                  <Card.Title>Players</Card.Title>
+                  <div id='video-grid'></div>
+                  </Card.Body>
+              </Container>
+            </Card> */}
             </Col>
           </Row>
       </Container>

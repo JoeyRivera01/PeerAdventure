@@ -21,17 +21,14 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname+ '/../client/dist');
 
 const rooms = {};
-const roomId = uuidV4();
+// const roomId = uuidV4();
 
 // set initial routes
 app.get('/', (req, res)=>{
-  res.redirect(`/${roomId}`);
+  res.redirect(`/${uuidV4()}`);
 });
 app.get('/:room', (req, res) => {
   res.render('index.ejs', {roomId: req.params.room});
-});
-app.get('/roomId', (req, res) => {
-  res.send(roomId);
 });
 
 // set adventure router
@@ -50,11 +47,11 @@ io.on('connection', socket => {
   socket.on('join-room', (roomId, userId, socketId) => {
     socket.join(roomId);
     socket.to(roomId).emit('user-connected', userId);
-    if(rooms[roomId]) {
+    if (rooms[roomId]) {
       io.to(socketId).emit('current-room', rooms[roomId]);
     }
-    socket.on('disconnect', ()=> {
-      socket.to(roomId).emit('user-disconnected', userId);
+    socket.on('disconnect', () => {
+      socket.broadcast.to(roomId).emit('user-disconnected', userId);
     });
   });
 });
