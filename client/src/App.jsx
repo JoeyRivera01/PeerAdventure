@@ -13,10 +13,11 @@ const socket = io();
 const myPeer = new Peer(undefined, {
   host: '/', port: '3001'
 });
+const peers = {};
 
 function App() {
   const [playerCount, setPlayerCount] = useState(1);
-  const [peers, setPeers] = useState({});
+  // const [peers, setPeers] = useState({});
   // const [adventureId, setAdventureId] = useState(1);
   // const [adventure, setAdventure] = useState();
   // const [] = useState();
@@ -81,14 +82,10 @@ function App() {
 
     call.on('close', () => {
       video.remove();
-      let peer = {};
-      peer[userId] = null;
-      setPeers(peer);
+      peers[userId] = null;
     });
 
-    let peer = {}
-    peer[userId] = call;
-    setPeers(peer);
+    peers[userId] = call;
   }
 
   return (
@@ -101,15 +98,12 @@ function App() {
               <GameCard/>
             </Col>
             <Col>
-            <div id='video-grid'></div>
-            {/* <Card bg="dark" variant="dark" style={{ width: '35vw', height: '80vh' }}>
-              <Container>
-                <Card.Body>
-                  <Card.Title>Players</Card.Title>
-                  <div id='video-grid'></div>
-                  </Card.Body>
-              </Container>
-            </Card> */}
+            <Card bg="dark" variant="dark" style={{ width: '35vw', height: '80vh' }}>
+              <Card.Body>
+                <Card.Title>Players</Card.Title>
+                <div id='video-grid'></div>
+              </Card.Body>
+            </Card>
             </Col>
           </Row>
       </Container>
