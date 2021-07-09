@@ -4,9 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import NavigationBar from './components/NavigationBar.jsx';
 import GameCard from './components/GameCard.jsx';
-// import PeerPanel from './components/PeerPanel.jsx';
 import { io } from "socket.io-client";
 import Peer from 'peerjs';
+import axios from 'axios';
 
 const socket = io();
 const myPeer = new Peer(undefined, {
@@ -16,6 +16,19 @@ const peers = {};
 
 function App() {
   const [playerCount, setPlayerCount] = useState(1);
+  const [adventure, setAdventure] = useState({});
+  const [endGame, setEndgame] = useState(false);
+
+  const getAdventureById = (id) => {
+    axios.get(`799f020e-3984-460d-aa02-096b8c0e2cb8/adventure/${id}`)
+      .then((response) => {
+        if (response.data.endGame) {
+          setEndgame(true);
+        }
+        setAdventure(response.data);
+      })
+      .catch((err) => console.log('error while fetching adventureById', err));
+  }
 
   useEffect(() => {
     const hostVideo = document.createElement('video');
@@ -90,12 +103,12 @@ function App() {
 
   return (
     <div className="App">
-      <NavigationBar/>
+      <NavigationBar getAdventureById={getAdventureById} endGame={endGame} setEndgame={setEndgame} />
       <header className="App-header">
       <Container >
           <Row>
             <Col>
-              <GameCard/>
+              <GameCard adventure={adventure} endGame={endGame} setEndgame={setEndgame} getAdventureById={getAdventureById}/>
             </Col>
             <Col>
             <Card bg="dark" variant="dark" style={{ width: '35vw', height: '80vh' }}>
