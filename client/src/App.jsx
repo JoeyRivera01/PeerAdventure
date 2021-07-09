@@ -7,7 +7,6 @@ import GameCard from './components/GameCard.jsx';
 // import PeerPanel from './components/PeerPanel.jsx';
 import { io } from "socket.io-client";
 import Peer from 'peerjs';
-import axios from 'axios';
 
 const socket = io();
 const myPeer = new Peer(undefined, {
@@ -17,10 +16,6 @@ const peers = {};
 
 function App() {
   const [playerCount, setPlayerCount] = useState(1);
-  // const [peers, setPeers] = useState({});
-  // const [adventureId, setAdventureId] = useState(1);
-  // const [adventure, setAdventure] = useState();
-  // const [] = useState();
 
   useEffect(() => {
     const hostVideo = document.createElement('video');
@@ -69,23 +64,28 @@ function App() {
   }
 
   const connectToNewUser = (userId, stream) => {
-    console.log('a new user is attempting a connection');
-    let call = myPeer.call(userId, stream);
-    let video = document.createElement('video');
-    video.muted = true; // set to true just for demo to avoid feedback.
-    video.id = 'guest-video';
+    if (playerCount < 4) {
+      console.log('a new user is attempting a connection');
+      let call = myPeer.call(userId, stream);
+      let video = document.createElement('video');
+      video.muted = true; // set to true just for demo to avoid feedback.
+      video.id = 'guest-video';
 
-    call.on('stream', userVideoStream =>{
-      console.log('receiving video stream from new user');
-      addVideoStream(video, userVideoStream);
-    });
+      call.on('stream', userVideoStream =>{
+        console.log('receiving video stream from new user');
+        addVideoStream(video, userVideoStream);
+      });
 
-    call.on('close', () => {
-      video.remove();
-      peers[userId] = null;
-    });
+      call.on('close', () => {
+        video.remove();
+        peers[userId] = null;
+      });
 
-    peers[userId] = call;
+      peers[userId] = call;
+      setPlayerCount(prevCount => prevCount + 1)
+    } else {
+      console.log('The room is full!');
+    }
   }
 
   return (
