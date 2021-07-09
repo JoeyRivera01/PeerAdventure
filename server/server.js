@@ -20,18 +20,22 @@ app.use(express.static(__dirname + '/../client/dist'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname+ '/../client/dist');
 
+const rooms = {};
+const roomId = uuidV4();
+
 // set initial routes
 app.get('/', (req, res)=>{
-  res.redirect(`/${uuidV4()}`);
+  res.redirect(`/${roomId}`);
 });
-app.get('/:room', (req, res)=>{
+app.get('/:room', (req, res) => {
   res.render('index.ejs', {roomId: req.params.room});
+});
+app.get('/roomId', (req, res) => {
+  res.send(roomId);
 });
 
 // set adventure router
-app.use('/:room/adventure', adventureRouter);
-
-const rooms = {};
+app.use('/adventure', adventureRouter);
 
 // setup database connections
 const mongoose = require('mongoose');
@@ -44,17 +48,15 @@ db.once('open', () => console.log('Connected to Mongoose'));
 // setup socketIo
 io.on('connection', socket => {
   socket.on('join-room', (roomId, userId, socketId) => {
-    socket.join(roomId)
-    socket.to(roomId).emit('user-connected', userId)
+    socket.join(roomId);
+    socket.to(roomId).emit('user-connected', userId);
     if(rooms[roomId]) {
-      // roomQueue
-      io.to(socketId).emit('current-room', rooms[roomId])
+      io.to(socketId).emit('current-room', rooms[roomId]);
     }
     socket.on('disconnect', ()=> {
-      // user-disconnect
-      socket.to(roomId).emit('user-disconnected', userId)
-    })
-  })
+      socket.to(roomId).emit('user-disconnected', userId);
+    });
+  });
 });
 
 // setup server listening

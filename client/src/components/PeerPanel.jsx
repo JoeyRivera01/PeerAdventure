@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Image, Container } from 'react-bootstrap';
+import { Row, Col, Card, Container } from 'react-bootstrap';
 
 const PeerPanel = () => {
 
@@ -8,17 +8,7 @@ const PeerPanel = () => {
       <Container>
         <Card.Body>
           <Card.Title>Players</Card.Title>
-          <Col>
-            <Row xs={6} md={4} className="justify-content-md-center mb-3">
-              <Image src='https://picsum.photos/200/400' fluid />
-              <Image src='https://picsum.photos/200/400' fluid />
-            </Row>
-          </Col>
-          <Col>
-            <Row xs={6} md={4} className="justify-content-md-center mb-3">
-              <Image src='https://picsum.photos/200/400' fluid />
-              <Image src='https://picsum.photos/200/400' fluid />
-            </Row>
+          <Col id='video-grid'>
           </Col>
       </Card.Body>
       </Container>
