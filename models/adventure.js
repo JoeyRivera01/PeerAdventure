@@ -10,10 +10,12 @@ const adventureSchema = new Schema({
   story: String,
   endGame: Boolean,
   choices: Array,
+  storyImage: String
 });
+
 /*
  Choices Array of objects =
- [ {endGame: Boolean, text: String, outcomeId: Number}, {}, {} ]
+ [ {text: String, outcomeId: Number}, {...}, {...} ]
 */
 
 // product model

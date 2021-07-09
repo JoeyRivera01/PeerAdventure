@@ -31,24 +31,28 @@ const GameCard = () => {
           <Col>
             <Row>
               <Card.Body>
-                <Card.Title className='mb-5'>Choose your path!</Card.Title>
-                <Card.Text style={{marginTop: '10vh'}}>
+                <Card.Title style={{marginBottom: '1vh'}}>Choose your path!</Card.Title>
+                <Card.Img variant="top" src={adventure.storyImage} height='275vh' style={{ objectFit: 'cover' }}/>
+                <Card.Text style={{marginTop: '1vh'}}>
                   {adventure.story}
                 </Card.Text>
               </Card.Body>
             </Row>
             <Row>
               { Object.keys(adventure).length !== 0 && endGame === false ?
-                <ListGroup style={{marginTop: '10vh'}}>
+                <ListGroup style={{marginTop: '1vh'}}> {/*used to be 10vh*/}
                   {adventure.choices.map((choice) => {
                     return (
-                      <ListGroup.Item key={Math.random() * 100000000 + 1} onClick={() => getAdventureById(choice.outcomeId)}>
+                      <ListGroup.Item
+                        key={Math.random() * 100000000 + 1}
+                        onClick={() => getAdventureById(choice.outcomeId)}
+                      >
                         {choice.text}
                       </ListGroup.Item>
                     )
                   })}
                 </ListGroup>
-              : <Button onClick={() => {
+              : <Button className="mt-3" onClick={() => {
                 getAdventureById(1);
                 setEndgame(false);
                 }}>
