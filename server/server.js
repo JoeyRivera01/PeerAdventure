@@ -32,7 +32,7 @@ app.get('/:room', (req, res) => {
 });
 
 // set adventure router
-app.use('/adventure', adventureRouter);
+app.use('/:room/adventure', adventureRouter);
 
 // setup database connections
 const mongoose = require('mongoose');
